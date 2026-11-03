@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Feedback System</title>
+<style>
+body { font-family: Arial, sans-serif; max-width: 600px;
+margin: 50px auto; padding: 20px; }
+input, textarea, button { display: block; width: 100%;
+box-sizing: border-box; padding: 12px; margin: 10px 0; }
+button { background: #1769aa; color: white;
+border: none; cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>Student Feedback System</h1>
+<p>Hosted on Vercel PaaS</p>
+<form id="feedbackForm">
+<label for="name">Name</label>
+<input id="name" placeholder="Your name" required>
+<label for="message">Feedback</label>
+<textarea id="message" placeholder="Your feedback" required></textarea>
+<button type="submit">Submit Feedback</button>
+</form>
+<p id="result" role="status"></p>
+<script>
+document.getElementById("feedbackForm")
+.addEventListener("submit", async (event) => {
+event.preventDefault();
+const result = document.getElementById("result");
+result.textContent = "Submitting...";
+try {
+const response = await fetch("/api/feedback", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+name: document.getElementById("name").value,
+message: document.getElementById("message").value
+})
+});
+const data = await response.json();
+result.textContent = data.message;
+if (response.ok) event.target.reset();
+} catch (error) {
+result.textContent = "Connection error.";
+}
+});
+</script>
+</body>
+</html>
